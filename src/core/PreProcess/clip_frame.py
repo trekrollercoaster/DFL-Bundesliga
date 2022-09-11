@@ -2,13 +2,12 @@ from src.core.VideoMAE.feature_extraction_videomae import VideoMAEFeatureExtract
 from tqdm.autonotebook import trange
 from src import BASE_PATH, CONFIG
 from decord import VideoReader
-from decord import cpu, gpu
+from decord import cpu
 import numpy as np
-import torch
 import json
 import os
 
-pu_func = gpu if torch.cuda.is_available() else cpu
+pu_func = cpu
 
 
 class ClipFrame:
@@ -49,6 +48,10 @@ class ClipFrame:
         sample_num = int(self.batch_size / self.sample_num_per_sec * fps)
         i = 0
         for index in trange(min_time2frame, max_time2frame, sample_num, desc="Sampling"):  # sample 4 frame each seconds
+            feature_save_path = os.path.join(self.features_save_path, f"{video_name}--{i}.npy")
+            label_save_path = os.path.join(self.labels_save_path, f"{video_name}--{i}.json")
+            if os.path.exists(feature_save_path) and os.path.exists(label_save_path):
+                continue
             batch_indies = [x for x in range(index, index + sample_num, int(fps / self.sample_num_per_sec) + 1)]
             batch_indies.extend(list(range(index, index + sample_num))[-max((0, self.batch_size - len(batch_indies))):])
             times = [x / fps for x in batch_indies]
@@ -57,10 +60,8 @@ class ClipFrame:
             frames_feature = self.feature_extractor(video, return_tensors="pt")
             labels = self._tag_time(video_info, times)
             frame_label = {"times": times, "labels": labels}
-            np.save(os.path.join(self.features_save_path, f"{video_name}--{i}.npy"),
-                    frames_feature,
-                    allow_pickle=True)
-            with open(os.path.join(self.labels_save_path, f"{video_name}--{i}.json"), "w", encoding="utf-8") as f:
+            np.save(feature_save_path, frames_feature, allow_pickle=True)
+            with open(label_save_path, "w", encoding="utf-8") as f:
                 json.dump(frame_label, f, indent=4, ensure_ascii=False)
             i += 1
 
@@ -75,8 +76,7 @@ class ClipFrame:
         for video_name, path in video_path.items():
             print(f"\nStart process {video_name}")
             sample_video_info = self.video_info[video_name]
-            with open(path, 'rb') as f:
-                vr = VideoReader(f, ctx=pu_func(0))
+            vr = VideoReader(path, ctx=pu_func(0))
             print('video frames:', len(vr))
             self._gen_frame_batch(video_name, sample_video_info, vr)
             print(f"Finish process {video_name}, {len(video_path) - i - 1} left\n")
