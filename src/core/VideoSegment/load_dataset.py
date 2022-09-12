@@ -1,8 +1,8 @@
 from transformers.modeling_outputs import ModelOutput
 from sklearn.model_selection import train_test_split
 from typing import Optional, Tuple
-from datasets import load_dataset
 from dataclasses import dataclass
+from datasets import load_dataset
 from typing import Dict, List
 from src import BASE_PATH
 import pandas as pd
