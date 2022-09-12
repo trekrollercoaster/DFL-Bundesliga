@@ -27,7 +27,7 @@ class LoadDataset:
         return data
 
     def _build_dataset(self):
-        feature_data = self._data_collection(self.features_path, ".npy")
+        feature_data = self._data_collection(self.features_path, ".npz")
         label_data = self._data_collection(self.labels_path, ".json")
         assert len(set(list(feature_data.keys())) & set(list(label_data.keys()))) == len(feature_data.keys()) == len(
             label_data.keys())

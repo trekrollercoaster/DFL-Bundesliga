@@ -48,7 +48,7 @@ class ClipFrame:
         sample_num = int(self.batch_size / self.sample_num_per_sec * fps)
         i = 0
         for index in trange(min_time2frame, max_time2frame, sample_num, desc="Sampling"):  # sample 4 frame each seconds
-            feature_save_path = os.path.join(self.features_save_path, f"{video_name}--{i}.npy")
+            feature_save_path = os.path.join(self.features_save_path, f"{video_name}--{i}.npz")
             label_save_path = os.path.join(self.labels_save_path, f"{video_name}--{i}.json")
             if os.path.exists(feature_save_path) and os.path.exists(label_save_path):
                 continue
@@ -60,7 +60,7 @@ class ClipFrame:
             frames_feature = self.feature_extractor(video, return_tensors="np")
             labels = self._tag_time(video_info, times)
             frame_label = {"times": times, "labels": labels}
-            np.save(feature_save_path, frames_feature["pixel_values"][0], allow_pickle=True)
+            np.savez_compressed(feature_save_path, frames_feature["pixel_values"][0], allow_pickle=True)
             with open(label_save_path, "w", encoding="utf-8") as f:
                 json.dump(frame_label, f, indent=4, ensure_ascii=False)
             i += 1
