@@ -96,6 +96,6 @@ class VideoDataCollator:
 @dataclass
 class FrameClassifierOutput(ModelOutput):
     loss: Optional[torch.FloatTensor] = None
-    logits: List[int] = None
+    logits: List = None
     hidden_states: Optional[Tuple[torch.FloatTensor]] = None
     attentions: Optional[Tuple[torch.FloatTensor]] = None
