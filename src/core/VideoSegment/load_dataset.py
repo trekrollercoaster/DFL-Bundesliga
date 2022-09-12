@@ -89,3 +89,11 @@ class VideoDataCollator:
             'pixel_values': pixel_values,
             'labels': labels
         }
+
+
+@dataclass
+class FrameClassifierOutput(ModelOutput):
+    loss: Optional[torch.FloatTensor] = None
+    logits: torch.IntTensor = None
+    hidden_states: Optional[Tuple[torch.FloatTensor]] = None
+    attentions: Optional[Tuple[torch.FloatTensor]] = None

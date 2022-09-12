@@ -1,5 +1,5 @@
+from src.core.VideoSegment.load_dataset import FrameClassifierOutput
 from src.core.VideoSegment.configuration import VideoSegmentConfig
-from transformers.modeling_outputs import TokenClassifierOutput
 from src.core.VideoMAE import VideoMAEModel
 from transformers import PreTrainedModel
 import torch.nn.functional as F
