@@ -1,7 +1,7 @@
 from src.core.VideoSegment.configuration import VideoSegmentConfig
 from transformers.modeling_outputs import TokenClassifierOutput
-from transformers import PreTrainedModel, PretrainedConfig
 from src.core.VideoMAE import VideoMAEModel
+from transformers import PreTrainedModel
 import torch.nn.functional as F
 from torchcrf import CRF
 import torch.nn as nn
