@@ -38,8 +38,10 @@ from transformers.utils import (
     logging,
     replace_return_docstrings,
 )
-from src.core.VideoMAE import IMAGENET_DEFAULT_MEAN, IMAGENET_DEFAULT_STD
 from src.core.VideoMAE.configuration_videomae import VideoMAEConfig
+
+IMAGENET_DEFAULT_MEAN = [0.485, 0.456, 0.406]
+IMAGENET_DEFAULT_STD = [0.229, 0.224, 0.225]
 
 logger = logging.get_logger(__name__)
 

@@ -57,10 +57,10 @@ class ClipFrame:
             times = [x / fps for x in batch_indies]
             frames = vr.get_batch(batch_indies).asnumpy()
             video = [frames[i] for i in range(frames.shape[0])]
-            frames_feature = self.feature_extractor(video, return_tensors="pt")
+            frames_feature = self.feature_extractor(video, return_tensors="np")
             labels = self._tag_time(video_info, times)
             frame_label = {"times": times, "labels": labels}
-            np.save(feature_save_path, frames_feature, allow_pickle=True)
+            np.save(feature_save_path, frames_feature["pixel_values"][0], allow_pickle=True)
             with open(label_save_path, "w", encoding="utf-8") as f:
                 json.dump(frame_label, f, indent=4, ensure_ascii=False)
             i += 1
