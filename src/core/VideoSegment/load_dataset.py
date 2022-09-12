@@ -1,4 +1,6 @@
+from transformers.modeling_outputs import ModelOutput
 from sklearn.model_selection import train_test_split
+from typing import Optional, Tuple
 from datasets import load_dataset
 from dataclasses import dataclass
 from typing import Dict, List
@@ -94,6 +96,6 @@ class VideoDataCollator:
 @dataclass
 class FrameClassifierOutput(ModelOutput):
     loss: Optional[torch.FloatTensor] = None
-    logits: torch.IntTensor = None
+    logits: List[int] = None
     hidden_states: Optional[Tuple[torch.FloatTensor]] = None
     attentions: Optional[Tuple[torch.FloatTensor]] = None

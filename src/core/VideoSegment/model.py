@@ -35,7 +35,7 @@ class VideoSegmentModel(PreTrainedModel, ABC):
         loss = None
         if labels is not None:
             loss = -self.crf(F.log_softmax(frame_hidden_state, 2), labels, reduction='mean')
-        out = TokenClassifierOutput(
+        out = FrameClassifierOutput(
             loss=loss,
             logits=predict,
             hidden_states=frame_hidden_state,
