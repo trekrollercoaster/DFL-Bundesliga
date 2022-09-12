@@ -89,6 +89,8 @@ class VideoDataCollator:
             except Exception as e:
                 os.remove(example["feature_path"])
                 os.remove(example["label_path"])
+                pixel_values.append(torch.from_numpy(np.zeros((16, 3, 244, 244))).type(torch.float))
+                labels.append(torch.from_numpy(np.zeros((16,))).type(torch.long))
                 print(e)
 
         pixel_values = torch.stack(pixel_values)
