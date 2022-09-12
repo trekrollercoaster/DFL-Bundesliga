@@ -79,12 +79,17 @@ class VideoDataCollator:
         """
         pixel_values, labels = [], []
         for example in batch:
-            feature = torch.from_numpy(np.load(example["feature_path"], allow_pickle=True)["arr_0"])
-            pixel_values.append(feature)
-            with open(example["label_path"], "r", encoding="utf-8") as f:
-                label_data = json.load(f)
-            label = torch.Tensor([self.label2id[x] for x in label_data["labels"]]).type(torch.long)
-            labels.append(label)
+            try:
+                feature = torch.from_numpy(np.load(example["feature_path"], allow_pickle=True)["arr_0"])
+                pixel_values.append(feature)
+                with open(example["label_path"], "r", encoding="utf-8") as f:
+                    label_data = json.load(f)
+                label = torch.Tensor([self.label2id[x] for x in label_data["labels"]]).type(torch.long)
+                labels.append(label)
+            except Exception as e:
+                os.remove(example["feature_path"])
+                os.remove(example["label_path"])
+                print(e)
 
         pixel_values = torch.stack(pixel_values)
         labels = torch.stack(labels)
