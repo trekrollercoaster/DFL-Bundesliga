@@ -87,8 +87,8 @@ class VideoDataCollator:
                 label = torch.Tensor([self.label2id[x] for x in label_data["labels"]]).type(torch.long)
                 labels.append(label)
             except Exception as e:
-                os.remove(example["feature_path"])
-                os.remove(example["label_path"])
+                print(example["feature_path"])
+                print(example["label_path"])
                 pixel_values.append(torch.from_numpy(np.zeros((16, 3, 244, 244))).type(torch.float))
                 labels.append(torch.from_numpy(np.zeros((16,))).type(torch.long))
                 print(e)
