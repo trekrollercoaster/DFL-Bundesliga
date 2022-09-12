@@ -51,6 +51,7 @@ class ClipFrame:
             feature_save_path = os.path.join(self.features_save_path, f"{video_name}--{i}.npz")
             label_save_path = os.path.join(self.labels_save_path, f"{video_name}--{i}.json")
             if os.path.exists(feature_save_path) and os.path.exists(label_save_path):
+                i += 1
                 continue
             batch_indies = [x for x in range(index, index + sample_num, int(fps / self.sample_num_per_sec) + 1)]
             batch_indies.extend(list(range(index, index + sample_num))[-max((0, self.batch_size - len(batch_indies))):])

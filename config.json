@@ -1,8 +1,9 @@
 {
   "data_path": "/Users/zeilou/Documents/dfl-bundesliga-data-shootout",
   "backbone": "MCG-NJU/videomae-base-finetuned-kinetics",
+  "model_name_or_path": "trek90s/t5-base-finetune-prompt",
   "seq_length": 16,
-  "output_dir": "output/t5-base-finetune-prompt",
+  "output_dir": "output/video_segment",
   "overwrite_output_dir": true,
   "per_device_train_batch_size": 8,
   "per_device_eval_batch_size": 8,

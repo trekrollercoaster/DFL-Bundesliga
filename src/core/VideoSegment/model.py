@@ -9,10 +9,10 @@ import torch
 
 
 class VideoSegmentModel(PreTrainedModel, ABC):
-    config_class = VideoSegmentConfig()
+    config_class = VideoSegmentConfig
 
-    def __init__(self, config: PretrainedConfig, *inputs, **kwargs):
-        super(PreTrainedModel).__init__(config, *inputs, **kwargs)
+    def __init__(self, config: VideoSegmentConfig, *inputs, **kwargs):
+        super(VideoSegmentModel, self).__init__(config, *inputs, **kwargs)
         self.num_classes = config.num_classes
         self.seq_length = config.seq_length
         self.backbone = VideoMAEModel.from_pretrained(config.backbone_name)
