@@ -83,7 +83,8 @@ class VideoDataCollator:
             pixel_values.append(feature)
             with open(example["label_path"], "r", encoding="utf-8") as f:
                 label_data = json.load(f)
-            labels.append(torch.from_numpy(np.array([self.label2id[x] for x in label_data["labels"]], dtype=np.int)))
+            label = torch.Tensor([self.label2id[x] for x in label_data["labels"]]).type(torch.long)
+            labels.append(label)
 
         pixel_values = torch.stack(pixel_values)
         labels = torch.stack(labels)
