@@ -43,4 +43,5 @@ class PredictTest:
                         "score": round(s, 2)
                     })
         result_df = pd.json_normalize(result)
+        result_df = result_df.sort_values(["video_id", "time"])
         result_df.to_csv(os.path.join(BASE_PATH, "data/sample_submission.csv"), encoding="utf-8", index=False)
