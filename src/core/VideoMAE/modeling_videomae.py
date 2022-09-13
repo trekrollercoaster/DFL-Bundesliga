@@ -68,7 +68,7 @@ class VideoMAEDecoderOutput(ModelOutput):
             plus the initial embedding outputs.
         attentions (`tuple(torch.FloatTensor)`, *optional*, returned when `output_attentions=True` is passed or when `config.output_attentions=True`):
             Tuple of `torch.FloatTensor` (one for each layer) of shape `(batch_size, num_heads, sequence_length,
-            sequence_length)`. Attentions weights after the attention softmax, used to compute the weighted average in
+            sequence_length)`. Attentions weights after the attention soft_max, used to compute the weighted average in
             the self-attention heads.
     """
 
@@ -93,7 +93,7 @@ class VideoMAEForPreTrainingOutput(ModelOutput):
             plus the initial embedding outputs.
         attentions (`tuple(torch.FloatTensor)`, *optional*, returned when `output_attentions=True` is passed or when `config.output_attentions=True`):
             Tuple of `torch.FloatTensor` (one for each layer) of shape `(batch_size, num_heads, sequence_length,
-            sequence_length)`. Attentions weights after the attention softmax, used to compute the weighted average in
+            sequence_length)`. Attentions weights after the attention soft_max, used to compute the weighted average in
             the self-attention heads.
     """
 

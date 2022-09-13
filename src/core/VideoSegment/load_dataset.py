@@ -31,13 +31,16 @@ class LoadDataset:
                     data.setdefault(str(file_name).replace(fix, ""), os.path.join(root, file_name))
         return data
 
-    def _build_dataset(self):
+    def _build_dataset(self, test=False):
         feature_data = self._data_collection(self.features_path, ".npz")
         label_data = self._data_collection(self.labels_path, ".json")
         assert len(set(list(feature_data.keys())) & set(list(label_data.keys()))) == len(feature_data.keys()) == len(
             label_data.keys())
         data_index = list(feature_data.keys())
-        train_index, valid_index = train_test_split(data_index, test_size=self.test_size)
+        if test:
+            train_index, valid_index = data_index, []
+        else:
+            train_index, valid_index = train_test_split(data_index, test_size=self.test_size)
         train_data, valid_data = [], []
         for data_name in feature_data.keys():
             feature = feature_data[data_name]
@@ -53,7 +56,8 @@ class LoadDataset:
                     "label_path": label
                 })
         pd.json_normalize(train_data).to_csv(self.train_data_save_path, index=False, encoding="utf-8")
-        pd.json_normalize(valid_data).to_csv(self.valid_data_save_path, index=False, encoding="utf-8")
+        if not test:
+            pd.json_normalize(valid_data).to_csv(self.valid_data_save_path, index=False, encoding="utf-8")
 
     def load_dataset(self):
         if not os.path.exists(self.train_data_save_path) or not os.path.exists(self.valid_data_save_path):
@@ -63,6 +67,44 @@ class LoadDataset:
             "valid": self.valid_data_save_path
         })
         return dataset
+
+
+class LoadTestDataset(LoadDataset):
+    def __init__(self, test_size=0.):
+        super(LoadTestDataset, self).__init__(test_size)
+        self.test_size = test_size
+        self.features_path = os.path.join(BASE_PATH, "data/test_source/features")
+        self.labels_path = os.path.join(BASE_PATH, "data/test_source/labels")
+        self.train_data_save_path = os.path.join(BASE_PATH, "data/test_source/test.csv")
+        with open(os.path.join(BASE_PATH, "data/label2id.json"), "r", encoding="utf-8") as f:
+            self.label2id = json.load(f)
+
+    def load_dataset(self):
+        if not os.path.exists(self.train_data_save_path):
+            self._build_dataset(test=True)
+        dataset = load_dataset("csv", data_files={"test": self.train_data_save_path})
+        return dataset
+
+    @staticmethod
+    def convert_to_features(example_batch):
+        pixel_values, labels, names = [], [], []
+        for feature_path, label_path in zip(example_batch["feature_path"], example_batch["label_path"]):
+            try:
+                name = str(label_path).split("/")[-1].split(".json")[0]
+                feature = torch.from_numpy(np.load(feature_path, allow_pickle=True)["arr_0"])
+                pixel_values.append(feature)
+                with open(label_path, "r", encoding="utf-8") as f:
+                    label_data = json.load(f)
+                labels.append(label_data["times"])
+                names.append(name)
+            except Exception as e:
+                print(e, feature_path, label_path)
+        pixel_values = torch.stack(pixel_values)
+        return {
+            'pixel_values': pixel_values,
+            'labels': labels,
+            'names': names,
+        }
 
 
 @dataclass
